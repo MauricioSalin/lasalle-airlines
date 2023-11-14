@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Marketplace",
+    "phone": "(51) 999231401",
+    "address": "Av. Inconfidência, 1357",
+    "monthlyPayment": true
+  },
+  {
+    "name": "Marketplace",
+    "phone": "(51) 999231401",
+    "address": "Av. Inconfidência, 1357",
+    "monthlyPayment": true
+  },
+  {
+    "name": "Marketplace",
+    "phone": "(51) 999231401",
+    "address": "Av. Inconfidência, 1357",
+    "monthlyPayment": false
+  },
+  {
+    "name": "Marketplace",
+    "phone": "(51) 999231401",
+    "address": "Av. Inconfidência, 1357",
+    "monthlyPayment": false
+  }
+]
