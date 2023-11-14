@@ -48,7 +48,7 @@ export default function SignIn() {
   return (
     <DefaultAuthLayout
       illustrationBackground={
-        "http://www.bonanzaclube.com.br/img/video/10/aa7d34d82edac68d3e682e0cef7f7ce7.jpg"
+        "https://c.wallhere.com/photos/9c/16/sunset_pordosol_fab_silhouette_contraluz_airplane_aircraft_aviation-656988.jpg!d"
       }
     >
       <Flex
