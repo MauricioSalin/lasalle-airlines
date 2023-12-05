@@ -15,7 +15,7 @@ export function SidebarBrand() {
       color="white"
       w="full"
     >
-      <img style={{ marginLeft: -25 }} src="/img/311601.svg" width={120}></img>
+      <img style={{ marginLeft: -30 }} src="/img/311603.svg" width={120}></img>
 
       <HSeparator mt="20px" mb="20px" />
     </Flex>

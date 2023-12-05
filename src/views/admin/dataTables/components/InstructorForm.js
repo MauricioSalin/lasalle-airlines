@@ -48,8 +48,10 @@ export default function HookForm({
       reset({
         name: item.name,
         username: item.username,
-        phone: item.phone,
+        licenceId: item.licenceId,
         email: item.email,
+        phone: item.phone,
+        formationInstitution: item.formationInstitution,
       });
     }
   }, [reset]);
@@ -74,7 +76,7 @@ export default function HookForm({
           />
         </Box>
         <Box p="3">
-          <FormLabel htmlFor="name">Usuário</FormLabel>
+          <FormLabel htmlFor="username">Usuário</FormLabel>
           <Input
             focusBorderColor="brand.400"
             color={"var(--chakra-colors-gray-400)"}
@@ -87,7 +89,7 @@ export default function HookForm({
           />
         </Box>
         <Box p="3">
-          <FormLabel htmlFor="totalPrice">E-mail</FormLabel>
+          <FormLabel htmlFor="email">E-mail</FormLabel>
           <Input
             focusBorderColor="brand.400"
             id="email"
@@ -100,13 +102,41 @@ export default function HookForm({
           />
         </Box>
         <Box p="3">
-          <FormLabel htmlFor="date">Telefone</FormLabel>
+          <FormLabel htmlFor="phone">Telefone</FormLabel>
           <Input
             focusBorderColor="brand.400"
             id="name"
             color={"var(--chakra-colors-gray-400)"}
             placeholder="Telefone"
             {...register("phone", {
+              required: "This is required",
+              minLength: { value: 4, message: "Minimum length should be 4" },
+            })}
+          />
+        </Box>
+
+        <Box p="3">
+          <FormLabel htmlFor="licenceId">Licença</FormLabel>
+          <Input
+            focusBorderColor="brand.400"
+            id="licenceId"
+            color={"var(--chakra-colors-gray-400)"}
+            placeholder="Licença"
+            {...register("licenceId", {
+              required: "This is required",
+              minLength: { value: 4, message: "Minimum length should be 4" },
+            })}
+          />
+        </Box>
+
+        <Box p="3">
+          <FormLabel htmlFor="formationInstitution">Formação</FormLabel>
+          <Input
+            focusBorderColor="brand.400"
+            id="formationInstitution"
+            color={"var(--chakra-colors-gray-400)"}
+            placeholder="Formação"
+            {...register("formationInstitution", {
               required: "This is required",
               minLength: { value: 4, message: "Minimum length should be 4" },
             })}

@@ -10,15 +10,7 @@ import {
 import MiniCalendar from "components/calendar/MiniCalendar";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
-import { MdAddTask, MdAttachMoney, MdPeopleAlt } from "react-icons/md";
-import CheckTable from "views/admin/default/components/CheckTable";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import {
-  columnsDataCheck,
-  TableData,
-} from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
+import { MdPeopleAlt, MdOutlineAccessTime } from "react-icons/md";
 import AdminLayout from "layouts/admin";
 
 export default function UserReports() {
@@ -68,7 +60,12 @@ export default function UserReports() {
                 h="56px"
                 bg={boxBg}
                 icon={
-                  <Icon w="32px" h="32px" as={MdPeopleAlt} color={brandColor} />
+                  <Icon
+                    w="32px"
+                    h="32px"
+                    as={MdOutlineAccessTime}
+                    color={brandColor}
+                  />
                 }
               />
             }
