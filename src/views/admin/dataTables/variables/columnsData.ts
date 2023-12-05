@@ -76,10 +76,6 @@ export const clientDataTable: Columns = [
     accessor: "phone",
   },
   {
-    Header: "E-MAIL",
-    accessor: "email",
-  },
-  {
     Header: "HORAS",
     accessor: "flightHours",
   },
