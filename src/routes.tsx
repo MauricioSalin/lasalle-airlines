@@ -1,19 +1,8 @@
 import { Icon } from "@chakra-ui/react";
-import {
-  MdPerson,
-  MdHome,
-  MdOutlineSchedule,
-  MdPeopleAlt,
-  MdDashboard,
-  MdAttachMoney,
-} from "react-icons/md";
+import { MdHome, MdPeopleAlt } from "react-icons/md";
 
 // Admin Imports
 import MainDashboard from "pages/admin/default";
-import DataTables from "pages/admin/data-tables";
-
-// Auth Imports
-import SignInCentered from "pages/auth/sign-in";
 import { IRoute } from "types/navigation";
 
 const routes: IRoute[] = [
@@ -27,26 +16,24 @@ const routes: IRoute[] = [
   {
     name: "Alunos",
     layout: "/admin",
-    path: "/responsaveis",
+    path: "/alunos",
     icon: <Icon as={MdPeopleAlt} width="20px" height="20px" color="inherit" />,
-    component: DataTables,
-    secondary: true,
+    component: MainDashboard,
   },
   {
     name: "Instrutores",
     layout: "/admin",
-    path: "/responsaveis",
+    path: "/instrutores",
     icon: <Icon as={MdPeopleAlt} width="20px" height="20px" color="inherit" />,
-    component: DataTables,
-    secondary: true,
+    component: MainDashboard,
   },
   {
-    name: "Pilotos",
+    name: "Perfil",
     layout: "/admin",
-    path: "/responsaveis",
+    path: "/profile",
     icon: <Icon as={MdPeopleAlt} width="20px" height="20px" color="inherit" />,
-    component: DataTables,
-    secondary: true,
+    component: MainDashboard,
+    visible: false,
   },
 ];
 

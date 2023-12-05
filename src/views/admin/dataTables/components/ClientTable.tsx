@@ -6,7 +6,13 @@ import {
   useTable,
 } from "react-table";
 
-import { updateClient, insertClient, deleteClient } from "../../../../api";
+import {
+  updateClient,
+  insertClient,
+  deleteClient,
+  emitLicense,
+  insertHours,
+} from "../../../../api";
 
 import {
   Flex,
@@ -25,20 +31,34 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import ClientForm from "./ClientForm";
+import ClientFlyForm from "./ClientFlyForm";
 
 // Assets
-import { MdCheckCircle, MdCancel, MdAdd, MdEdit } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
+import {
+  MdCheckCircle,
+  MdCancel,
+  MdAdd,
+  MdEdit,
+  MdAlarmAdd,
+  MdKey,
+} from "react-icons/md";
 
 import { TableProps } from "views/admin/default/variables/columnsData";
 
 type Client = {
-  _id?: string;
-  name?: string;
-  status?: boolean | number;
-  address?: string;
-  phone?: string;
-  monthlyPayment?: boolean;
+  id: number | string;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  type: string;
+  flightHours: number;
+};
+
+type Hour = {
+  instructorId: number;
+  memberId: number;
+  hours: number;
 };
 
 export default function ColumnsTable(props: TableProps) {
@@ -47,7 +67,9 @@ export default function ColumnsTable(props: TableProps) {
   const columns = useMemo(() => columnsData, [columnsData]);
 
   const [openForm, setOpenForm] = useState(false);
-  const [client, setClient] = useState<Client>({});
+  const [openFlyForm, setOpenFlyForm] = useState(false);
+
+  const [client, setClient] = useState<Client>({} as Client);
   const [data, setData] = useState<Client[]>(tableData);
 
   const tableInstance = useTable(
@@ -75,7 +97,7 @@ export default function ColumnsTable(props: TableProps) {
   const iconColor = useColorModeValue("brand.500", "white");
 
   const onClickAddClient = () => {
-    setClient({});
+    setClient({} as Client);
     setOpenForm(true);
   };
 
@@ -85,9 +107,9 @@ export default function ColumnsTable(props: TableProps) {
   };
 
   const onClickDelete = async (client: Client) => {
-    setData(data.filter((a) => a._id !== client._id));
+    setData(data.filter((a) => a.id !== client.id));
 
-    await deleteClient(client._id);
+    await deleteClient(client.id);
   };
 
   const onInsertClient = async (payload: Client) => {
@@ -97,9 +119,9 @@ export default function ColumnsTable(props: TableProps) {
     setOpenForm(false);
   };
 
-  const onUpdateClient = async (_id: string, payload: Client) => {
+  const onUpdateClient = async (id: string, payload: Client) => {
     const newData = data.map((el) => {
-      if (el._id === _id) {
+      if (el.id == id) {
         return { ...el, ...payload };
       }
 
@@ -109,7 +131,20 @@ export default function ColumnsTable(props: TableProps) {
     setData(newData);
     setOpenForm(false);
 
-    await updateClient(_id, payload);
+    await updateClient(payload);
+  };
+
+  const onEmitLicense = async (client: Client) => {
+    await emitLicense(client);
+  };
+
+  const onClickAddHour = async (client: Client) => {
+    setClient(client);
+    setOpenFlyForm(true);
+  };
+
+  const onAddHours = async (fly: Hour) => {
+    await insertHours(fly);
   };
 
   return (
@@ -122,10 +157,17 @@ export default function ColumnsTable(props: TableProps) {
       >
         {openForm ? (
           <ClientForm
+            item={client}
             onAddClient={onInsertClient}
             onUpdateClient={onUpdateClient}
-            item={client}
+            onClickDelete={onClickDelete}
             setOpenForm={setOpenForm}
+          />
+        ) : openFlyForm ? (
+          <ClientFlyForm
+            item={client}
+            onAddHours={onAddHours}
+            setOpenForm={setOpenFlyForm}
           />
         ) : (
           <>
@@ -185,18 +227,21 @@ export default function ColumnsTable(props: TableProps) {
                 {page.map((row, index) => {
                   prepareRow(row);
 
+                  const item = row.original as Client;
+
                   return (
                     <Tr {...row.getRowProps()} key={index}>
                       {row.cells.map((cell, index) => {
                         let data;
-                        if (cell.column.Header === "MENSALISTA") {
+                        if (cell.column.Header === "PILOTO") {
                           data = (
-                            <Flex align="center" paddingLeft={8}>
+                            <Flex align="center" paddingLeft="10px">
                               <Icon
                                 w="24px"
                                 h="24px"
-                                me="5px"
-                                color={cell.value ? "green.500" : "red.500"}
+                                color={
+                                  cell.value === "2" ? "green.500" : "red.500"
+                                }
                                 as={cell.value ? MdCheckCircle : MdCancel}
                               />
                             </Flex>
@@ -207,6 +252,7 @@ export default function ColumnsTable(props: TableProps) {
                               color={textColor}
                               fontSize="sm"
                               fontWeight="700"
+                              paddingLeft="2px"
                             >
                               {cell.value}
                             </Text>
@@ -228,13 +274,34 @@ export default function ColumnsTable(props: TableProps) {
 
                       <Td fontSize={{ sm: "14px" }} borderColor="transparent">
                         <Flex justifyContent="flex-end">
+                          {item.flightHours > 400 && item.type === "1" && (
+                            <Button
+                              alignItems="center"
+                              justifyContent="center"
+                              w="37px"
+                              h="37px"
+                              lineHeight="100%"
+                              onClick={() =>
+                                onEmitLicense(row.original as Client)
+                              }
+                              borderRadius="10px"
+                              style={{ marginRight: 6 }}
+                            >
+                              <Icon
+                                as={MdKey}
+                                color={iconColor}
+                                w="20px"
+                                h="20px"
+                              />
+                            </Button>
+                          )}
                           <Button
                             alignItems="center"
                             justifyContent="center"
                             w="37px"
                             h="37px"
                             lineHeight="100%"
-                            onClick={() => onClickEdit(row.original)}
+                            onClick={() => onClickEdit(row.original as Client)}
                             borderRadius="10px"
                           >
                             <Icon
@@ -250,12 +317,14 @@ export default function ColumnsTable(props: TableProps) {
                             w="37px"
                             h="37px"
                             lineHeight="100%"
-                            onClick={() => onClickDelete(row.original)}
                             borderRadius="10px"
                             style={{ marginLeft: 6 }}
+                            onClick={() =>
+                              onClickAddHour(row.original as Client)
+                            }
                           >
                             <Icon
-                              as={IoMdTrash}
+                              as={MdAlarmAdd}
                               color={iconColor}
                               w="20px"
                               h="20px"

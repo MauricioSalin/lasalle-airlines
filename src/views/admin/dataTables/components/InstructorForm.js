@@ -8,15 +8,15 @@ import {
   Input,
   Button,
   FormLabel,
-  Switch,
   FormControl,
   FormErrorMessage,
 } from "@chakra-ui/react";
 
 export default function HookForm({
   item,
-  onAddClient,
-  onUpdateClient,
+  onAddInstructor,
+  onUpdateInstructor,
+  onClickDelete,
   setOpenForm,
 }) {
   const {
@@ -27,27 +27,29 @@ export default function HookForm({
   } = useForm({
     defaultValues: {
       name: "",
+      licenceId: "",
+      username: "",
+      email: "",
       phone: "",
-      address: "",
-      monthlyPayment: false,
+      formationInstitution: "",
     },
   });
 
   const onSubmit = (values) => {
     if (item.hasOwnProperty("name")) {
-      return onUpdateClient(item._id, values);
+      return onUpdateInstructor(item._id, values);
     }
 
-    return onAddClient(values);
+    return onAddInstructor(values);
   };
 
   useEffect(() => {
     if (item.hasOwnProperty("name")) {
       reset({
         name: item.name,
+        username: item.username,
         phone: item.phone,
-        address: item.address,
-        monthlyPayment: item.monthlyPayment,
+        email: item.email,
       });
     }
   }, [reset]);
@@ -71,7 +73,32 @@ export default function HookForm({
             })}
           />
         </Box>
-
+        <Box p="3">
+          <FormLabel htmlFor="name">Usuário</FormLabel>
+          <Input
+            focusBorderColor="brand.400"
+            color={"var(--chakra-colors-gray-400)"}
+            id="username"
+            placeholder="Usuário"
+            {...register("username", {
+              required: "This is required",
+              minLength: { value: 4, message: "Minimum length should be 4" },
+            })}
+          />
+        </Box>
+        <Box p="3">
+          <FormLabel htmlFor="totalPrice">E-mail</FormLabel>
+          <Input
+            focusBorderColor="brand.400"
+            id="email"
+            placeholder="E-mail"
+            color={"var(--chakra-colors-gray-400)"}
+            {...register("email", {
+              required: "This is required",
+              minLength: { value: 4, message: "Minimum length should be 4" },
+            })}
+          />
+        </Box>
         <Box p="3">
           <FormLabel htmlFor="date">Telefone</FormLabel>
           <Input
@@ -85,38 +112,25 @@ export default function HookForm({
             })}
           />
         </Box>
-
-        <Box p="3">
-          <FormLabel htmlFor="totalPrice">Endereço</FormLabel>
-          <Input
-            focusBorderColor="brand.400"
-            id="address"
-            placeholder="Endereço"
-            color={"var(--chakra-colors-gray-400)"}
-            {...register("address", {
-              required: "This is required",
-              minLength: { value: 4, message: "Minimum length should be 4" },
-            })}
-          />
-        </Box>
-
-        <Box p="3">
-          <FormLabel htmlFor="totalPrice">Mensalista</FormLabel>
-          <Switch
-            colorScheme="brand"
-            id="monthlyPayment"
-            {...register("monthlyPayment")}
-          />
-        </Box>
-
         <FormErrorMessage>
           {errors.name && errors.name.message}
         </FormErrorMessage>
       </FormControl>
 
       <Box p="3">
-        <Button mt={1} pl={6} pr={6} isLoading={isSubmitting} type="submit">
+        <Button
+          mt={1}
+          pl={6}
+          pr={6}
+          isLoading={isSubmitting}
+          type="submit"
+          mr={3}
+        >
           {item.hasOwnProperty("name") ? "Atualizar" : "Adicionar"}
+        </Button>
+
+        <Button mt={1} pl={6} pr={6} onClick={() => onClickDelete(item)}>
+          Deletar
         </Button>
 
         <Button

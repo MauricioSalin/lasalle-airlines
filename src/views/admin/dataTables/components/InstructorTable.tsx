@@ -6,7 +6,13 @@ import {
   useTable,
 } from "react-table";
 
-import { updateMonthly, insertMonthly, deleteMonthly } from "../../../../api";
+import {
+  updateInstructor,
+  insertInstructor,
+  deleteInstructor,
+  emitLicense,
+  insertHours,
+} from "../../../../api";
 
 import {
   Flex,
@@ -24,7 +30,7 @@ import {
 
 // Custom components
 import Card from "components/card/Card";
-import MonthlyForm from "./MonthlyForm";
+import InstructorForm from "./InstructorForm";
 
 // Assets
 import {
@@ -32,15 +38,21 @@ import {
   MdCancel,
   MdAdd,
   MdEdit,
-  MdOutlineError,
+  MdAlarmAdd,
+  MdKey,
 } from "react-icons/md";
-import { IoMdTrash } from "react-icons/io";
 
 import { TableProps } from "views/admin/default/variables/columnsData";
 
-import { Monthly } from "../../default/variables/columnsData";
-
-type Status = any;
+type Instructor = {
+  id: number | string;
+  name: string;
+  licenceId: string;
+  username: string;
+  email: string;
+  phone: string;
+  formationInstitution: string;
+};
 
 export default function ColumnsTable(props: TableProps) {
   const { columnsData, tableData } = props;
@@ -48,8 +60,8 @@ export default function ColumnsTable(props: TableProps) {
   const columns = useMemo(() => columnsData, [columnsData]);
 
   const [openForm, setOpenForm] = useState(false);
-  const [parcel, setParcel] = useState<Monthly>({});
-  const [data, setData] = useState<Monthly[]>(tableData);
+  const [instructor, setInstructor] = useState<Instructor>({} as Instructor);
+  const [data, setData] = useState<Instructor[]>(tableData);
 
   const tableInstance = useTable(
     {
@@ -75,32 +87,32 @@ export default function ColumnsTable(props: TableProps) {
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const iconColor = useColorModeValue("brand.500", "white");
 
-  const onClickAdd = () => {
-    setParcel({});
+  const onClickAddInstructor = () => {
+    setInstructor({} as Instructor);
     setOpenForm(true);
   };
 
-  const onClickEdit = (parcel: Monthly) => {
-    setParcel(parcel);
+  const onClickEdit = (instructor: Instructor) => {
+    setInstructor(instructor);
     setOpenForm(true);
   };
 
-  const onClickDelete = async (parcel: Monthly) => {
-    setData(data.filter((a) => a._id !== parcel._id));
+  const onClickDelete = async (instructor: Instructor) => {
+    setData(data.filter((a) => a.id !== instructor.id));
 
-    await deleteMonthly(parcel._id);
+    await deleteInstructor(instructor.id);
   };
 
-  const onInsertMonthly = async (payload: Monthly) => {
-    const res = await insertMonthly(payload);
+  const onInsertInstructor = async (payload: Instructor) => {
+    const res = await insertInstructor(payload);
 
     setData([...data, res.data]);
     setOpenForm(false);
   };
 
-  const onUpdateMonthly = async (_id: string, payload: Monthly) => {
+  const onUpdateInstructor = async (id: string, payload: Instructor) => {
     const newData = data.map((el) => {
-      if (el._id === _id) {
+      if (el.id == id) {
         return { ...el, ...payload };
       }
 
@@ -110,13 +122,7 @@ export default function ColumnsTable(props: TableProps) {
     setData(newData);
     setOpenForm(false);
 
-    await updateMonthly(_id, payload);
-  };
-
-  const getStatus: Status = {
-    pending: "Pendente",
-    return: "Retorno",
-    visited: "Visitado",
+    await updateInstructor(payload);
   };
 
   return (
@@ -128,10 +134,11 @@ export default function ColumnsTable(props: TableProps) {
         overflowX={{ sm: "scroll", lg: "hidden" }}
       >
         {openForm ? (
-          <MonthlyForm
-            onAddClient={onInsertMonthly}
-            onUpdateClient={onUpdateMonthly}
-            item={parcel}
+          <InstructorForm
+            item={instructor}
+            onAddInstructor={onInsertInstructor}
+            onUpdateInstructor={onUpdateInstructor}
+            onClickDelete={onClickDelete}
             setOpenForm={setOpenForm}
           />
         ) : (
@@ -143,7 +150,7 @@ export default function ColumnsTable(props: TableProps) {
                 fontWeight="700"
                 lineHeight="100%"
               >
-                Lista de mensalidades
+                Lista de instrutores
               </Text>
               <Button
                 alignItems="center"
@@ -151,7 +158,7 @@ export default function ColumnsTable(props: TableProps) {
                 w="37px"
                 h="37px"
                 lineHeight="100%"
-                onClick={() => onClickAdd()}
+                onClick={() => onClickAddInstructor()}
                 borderRadius="10px"
               >
                 <Icon as={MdAdd} color={iconColor} w="20px" h="20px" />
@@ -192,60 +199,24 @@ export default function ColumnsTable(props: TableProps) {
                 {page.map((row, index) => {
                   prepareRow(row);
 
+                  const item = row.original as Instructor;
+
                   return (
                     <Tr {...row.getRowProps()} key={index}>
                       {row.cells.map((cell, index) => {
                         let data;
-                        if (cell.column.Header === "PAGAMENTO") {
+                        if (cell.column.Header === "PILOTO") {
                           data = (
-                            <Flex align="center">
+                            <Flex align="center" paddingLeft="10px">
                               <Icon
                                 w="24px"
                                 h="24px"
-                                me="5px"
-                                color={cell.value ? "green.500" : "red.500"}
+                                color={
+                                  cell.value === "2" ? "green.500" : "red.500"
+                                }
                                 as={cell.value ? MdCheckCircle : MdCancel}
                               />
-                              <Text
-                                color={textColor}
-                                fontSize="sm"
-                                fontWeight="700"
-                              >
-                                {cell.value ? "Pago" : "Atrasado"}
-                              </Text>
                             </Flex>
-                          );
-                        } else if (cell.column.Header === "VENCIMENTO") {
-                          const cntDate = new Date(cell.value);
-                          const strDate = `${cntDate.getDate() + 1}/${
-                            cntDate.getMonth() + 1 > 10
-                              ? cntDate.getMonth() + 1
-                              : `0${cntDate.getMonth() + 1}`
-                          }/${cntDate.getFullYear()}`;
-
-                          data = (
-                            <Text
-                              color={textColor}
-                              fontSize="sm"
-                              fontWeight="700"
-                            >
-                              {strDate}
-                            </Text>
-                          );
-                        } else if (cell.column.Header === "VALOR") {
-                          const value = cell.value.toLocaleString("pt-br", {
-                            style: "currency",
-                            currency: "BRL",
-                          });
-
-                          data = (
-                            <Text
-                              color={textColor}
-                              fontSize="sm"
-                              fontWeight="700"
-                            >
-                              {value}
-                            </Text>
                           );
                         } else {
                           data = (
@@ -253,6 +224,7 @@ export default function ColumnsTable(props: TableProps) {
                               color={textColor}
                               fontSize="sm"
                               fontWeight="700"
+                              paddingLeft="2px"
                             >
                               {cell.value}
                             </Text>
@@ -280,28 +252,13 @@ export default function ColumnsTable(props: TableProps) {
                             w="37px"
                             h="37px"
                             lineHeight="100%"
-                            onClick={() => onClickEdit(row.original)}
+                            onClick={() =>
+                              onClickEdit(row.original as Instructor)
+                            }
                             borderRadius="10px"
                           >
                             <Icon
                               as={MdEdit}
-                              color={iconColor}
-                              w="20px"
-                              h="20px"
-                            />
-                          </Button>
-                          <Button
-                            alignItems="center"
-                            justifyContent="center"
-                            w="37px"
-                            h="37px"
-                            lineHeight="100%"
-                            onClick={() => onClickDelete(row.original)}
-                            borderRadius="10px"
-                            style={{ marginLeft: 6 }}
-                          >
-                            <Icon
-                              as={IoMdTrash}
                               color={iconColor}
                               w="20px"
                               h="20px"

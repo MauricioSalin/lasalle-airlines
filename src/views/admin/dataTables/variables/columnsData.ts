@@ -68,75 +68,50 @@ export const clientDataTable: Columns = [
     accessor: "name",
   },
   {
+    Header: "USUÁRIO",
+    accessor: "username",
+  },
+  {
     Header: "TELEFONE",
     accessor: "phone",
   },
   {
-    Header: "ENDEREÇO",
-    accessor: "address",
+    Header: "E-MAIL",
+    accessor: "email",
   },
   {
-    Header: "MENSALISTA",
-    accessor: "monthlyPayment",
+    Header: "HORAS",
+    accessor: "flightHours",
+  },
+  {
+    Header: "PILOTO",
+    accessor: "type",
+  },
+  {
+    Header: "Licença",
+    accessor: "licenseId",
   },
 ];
 
-export const scheduleDataTable: Columns = [
-  {
-    Header: "NOME",
-    accessor: "clientName",
-  },
-  {
-    Header: "STATUS",
-    accessor: "status",
-  },
-  {
-    Header: "DATA",
-    accessor: "date",
-  },
-  {
-    Header: "RESPONSÁVEL",
-    accessor: "responsibleName",
-  },
-];
-
-export const monthlyDataTable: Columns = [
-  {
-    Header: "NOME",
-    accessor: "clientName",
-  },
-  {
-    Header: "VENCIMENTO",
-    accessor: "dueData",
-  },
-  {
-    Header: "VALOR",
-    accessor: "value",
-  },
-  {
-    Header: "PAGAMENTO",
-    accessor: "paid",
-  },
-];
-
-export const responsibleDataTable: Columns = [
+export const instructorDataTable: Columns = [
   {
     Header: "NOME",
     accessor: "name",
   },
-];
-
-export const taskDataTable: Columns = [
   {
-    Header: "",
-    accessor: "done",
+    Header: "TELEFONE",
+    accessor: "phone",
   },
   {
-    Header: "DESCRIÇÃO",
-    accessor: "description",
+    Header: "E-MAIL",
+    accessor: "email",
   },
   {
-    Header: "DATA",
-    accessor: "date",
+    Header: "Formação",
+    accessor: "formationInstitution",
+  },
+  {
+    Header: "Licença",
+    accessor: "licenceId",
   },
 ];

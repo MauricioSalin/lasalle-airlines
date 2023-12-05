@@ -8,17 +8,11 @@ import {
   Input,
   Button,
   FormLabel,
-  Switch,
   FormControl,
   FormErrorMessage,
 } from "@chakra-ui/react";
 
-export default function HookForm({
-  item,
-  onAddClient,
-  onUpdateClient,
-  setOpenForm,
-}) {
+export default function HookForm({ item, setOpenForm, onAddHours }) {
   const {
     reset,
     handleSubmit,
@@ -26,28 +20,27 @@ export default function HookForm({
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
+      id: "",
       name: "",
-      phone: "",
-      address: "",
-      monthlyPayment: false,
+      hours: 0,
     },
   });
 
   const onSubmit = (values) => {
-    if (item.hasOwnProperty("name")) {
-      return onUpdateClient(item._id, values);
+    if (item.hasOwnProperty("instructorId")) {
+      return onAddHours({
+        instructorId: values.instructorId,
+        memberId: values.id,
+        hours: values.hours,
+      });
     }
-
-    return onAddClient(values);
   };
 
   useEffect(() => {
     if (item.hasOwnProperty("name")) {
       reset({
+        id: item.id,
         name: item.name,
-        phone: item.phone,
-        address: item.address,
-        monthlyPayment: item.monthlyPayment,
       });
     }
   }, [reset]);
@@ -61,51 +54,47 @@ export default function HookForm({
         <Box p="3">
           <FormLabel htmlFor="name">Nome</FormLabel>
           <Input
+            disabled
             focusBorderColor="brand.400"
             color={"var(--chakra-colors-gray-400)"}
             id="name"
             placeholder="Nome"
-            {...register("name", {
-              required: "This is required",
-              minLength: { value: 4, message: "Minimum length should be 4" },
-            })}
+            {...register("name", {})}
           />
         </Box>
-
         <Box p="3">
-          <FormLabel htmlFor="date">Telefone</FormLabel>
+          <FormLabel htmlFor="instructorId">Instrutor Id</FormLabel>
           <Input
+            type="number"
             focusBorderColor="brand.400"
-            id="name"
             color={"var(--chakra-colors-gray-400)"}
-            placeholder="Telefone"
-            {...register("phone", {
+            id="instructorId"
+            placeholder="Instrutor Id"
+            {...register("instructorId", {
               required: "This is required",
-              minLength: { value: 4, message: "Minimum length should be 4" },
             })}
           />
         </Box>
-
         <Box p="3">
-          <FormLabel htmlFor="totalPrice">Endereço</FormLabel>
+          <FormLabel htmlFor="id">Aluno Id</FormLabel>
           <Input
+            disabled
             focusBorderColor="brand.400"
-            id="address"
-            placeholder="Endereço"
             color={"var(--chakra-colors-gray-400)"}
-            {...register("address", {
-              required: "This is required",
-              minLength: { value: 4, message: "Minimum length should be 4" },
-            })}
+            id="id"
+            placeholder="Usuário"
+            {...register("id", {})}
           />
         </Box>
-
         <Box p="3">
-          <FormLabel htmlFor="totalPrice">Mensalista</FormLabel>
-          <Switch
-            colorScheme="brand"
-            id="monthlyPayment"
-            {...register("monthlyPayment")}
+          <FormLabel htmlFor="hours">Horas</FormLabel>
+          <Input
+            type="number"
+            focusBorderColor="brand.400"
+            color={"var(--chakra-colors-gray-400)"}
+            id="hours"
+            placeholder="Horas"
+            {...register("hours", { required: "This is required" })}
           />
         </Box>
 

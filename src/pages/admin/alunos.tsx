@@ -11,19 +11,20 @@ import AdminLayout from "layouts/admin";
 import ClientTable from "views/admin/dataTables/components/ClientTable";
 
 type Client = {
-  _id: string;
+  id: number;
   name: string;
-  status: boolean | number;
-  address: string;
+  username: string;
+  email: string;
   phone: string;
-  monthlyPayment: boolean;
+  type: string;
+  flightHours: number;
 };
 
 type Props = {
   clients: Client[];
 };
 
-const ClientPage: NextPage<Props> = ({ clients }) => {
+export const ClientPage: NextPage<Props> = ({ clients }) => {
   return (
     <AdminLayout>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -39,11 +40,40 @@ const ClientPage: NextPage<Props> = ({ clients }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const clients = await getAllClients();
+  // const clients = await getAllClients();
 
   return {
     props: {
-      clients: clients.data.client,
+      clients: [
+        {
+          id: 1,
+          name: "Teste Finger",
+          username: "fingertest",
+          email: "fingervinic@test.com",
+          phone: "5551988888888",
+          type: "1",
+          flightHours: 350,
+        },
+        {
+          id: 2,
+          name: "Teste Thay",
+          username: "thaytest",
+          email: "thaytest@test.com",
+          phone: "5551988888888",
+          type: "1",
+          flightHours: 450,
+        },
+        {
+          id: 3,
+          name: "Teste Mauricio",
+          username: "salintest",
+          email: "salintest@test.com",
+          phone: "5551988888888",
+          type: "2",
+          flightHours: 550,
+          licenseId: "1234125",
+        },
+      ],
     },
   };
 };

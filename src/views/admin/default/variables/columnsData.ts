@@ -25,45 +25,26 @@ export const columnsDataComplex = [
 export type ColumnData = Column[];
 
 export type Client = {
-  _id?: string;
-  name?: string;
-  status?: boolean | number;
-  address?: string;
-  phone?: string;
-  monthlyPayment?: boolean;
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  type: string;
+  flightHours: number;
 };
 
-export type Responsible = {
-  _id?: string;
-  name?: string;
-  status?: boolean;
+type Instructor = {
+  id: number | string;
+  name: string;
+  licenceId: string;
+  username: string;
+  email: string;
+  phone: string;
+  formationInstitution: string;
 };
 
-export type Schedule = {
-  _id?: string;
-  status?: "pending" | "visited" | "return";
-  date?: string;
-  client?: Client;
-  responsible?: Responsible;
-};
-
-export type Monthly = {
-  _id?: string;
-  value?: number;
-  paid?: boolean;
-  client?: Client;
-  paymentAt?: string;
-  dueDate?: string;
-};
-
-export type Task = {
-  _id?: string;
-  done?: boolean;
-  date?: string;
-  description?: string;
-};
-
-export type TableData = Client & Schedule & Responsible & Monthly;
+export type TableData = Client & Instructor;
 
 export type TableProps = {
   columnsData: ColumnData;

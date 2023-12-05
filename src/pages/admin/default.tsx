@@ -1,4 +1,10 @@
-import { Box, Icon, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Icon,
+  SimpleGrid,
+  useColorModeValue,
+  Flex,
+} from "@chakra-ui/react";
 
 // Custom components
 import MiniCalendar from "components/calendar/MiniCalendar";
@@ -24,81 +30,52 @@ export default function UserReports() {
   return (
     <AdminLayout>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-        <>
-          <SimpleGrid
-            columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
-            gap="20px"
-            mb="20px"
-          >
-            <MiniStatistics
-              startContent={
-                <IconBox
-                  w="56px"
-                  h="56px"
-                  bg={boxBg}
-                  icon={
-                    <Icon
-                      w="32px"
-                      h="32px"
-                      as={MdAttachMoney}
-                      color={brandColor}
-                    />
-                  }
-                />
-              }
-              name="Esperado pro mês"
-              value="R$ 9.520"
-            />
-            <MiniStatistics
-              startContent={
-                <IconBox
-                  w="56px"
-                  h="56px"
-                  bg="linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)"
-                  icon={<Icon w="28px" h="28px" as={MdAddTask} color="white" />}
-                />
-              }
-              name="Tasks"
-              value="154"
-            />
-            <MiniStatistics
-              startContent={
-                <IconBox
-                  w="56px"
-                  h="56px"
-                  bg={boxBg}
-                  icon={
-                    <Icon
-                      w="32px"
-                      h="32px"
-                      as={MdPeopleAlt}
-                      color={brandColor}
-                    />
-                  }
-                />
-              }
-              name="Total de clientes"
-              value="2935"
-            />
-          </SimpleGrid>
+        <Flex grow={1} pl="12px" gridGap="20px" wrap="wrap">
+          <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdPeopleAlt} color={brandColor} />
+                }
+              />
+            }
+            name="Total de alunos"
+            value="2935"
+          />
 
-          <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-            <TotalSpent />
-            <MiniCalendar h="100%" selectRange={false} />
-          </SimpleGrid>
+          <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdPeopleAlt} color={brandColor} />
+                }
+              />
+            }
+            name="Total de instrutores"
+            value="2935"
+          />
 
-          <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-            <Tasks />
-            <CheckTable
-              columnsData={columnsDataCheck}
-              tableData={tableDataCheck as unknown as TableData[]}
-            />
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-            ></SimpleGrid>
-          </SimpleGrid>
-        </>
+          <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdPeopleAlt} color={brandColor} />
+                }
+              />
+            }
+            name="Horas de vôo"
+            value="2935"
+          />
+        </Flex>
       </Box>
     </AdminLayout>
   );
